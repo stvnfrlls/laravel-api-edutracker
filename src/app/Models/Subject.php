@@ -14,4 +14,9 @@ class Subject extends Model
         return $this->belongsToMany(Student::class, 'enrollments')
             ->withTimestamps();
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
