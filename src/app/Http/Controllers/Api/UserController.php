@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -37,6 +38,15 @@ class UserController extends Controller
 
         $user = User::create($validated);
         $user->roles()->attach($validated['role_id']);
+
+        // If role is student, create corresponding Student record
+        $role = $user->roles()->first(); // get attached role
+        if ($role->name === 'student') {
+            Student::create([
+                'user_id' => $user->id,
+                'student_number' => 'S' . str_pad($user->id, 4, '0', STR_PAD_LEFT)
+            ]);
+        }
 
         return response()->json($user, 201);
     }
