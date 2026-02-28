@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +36,16 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+});
+
+Route::middleware(['auth:sanctum','role:student'])->group(function () {
+    Route::get('/my-subjects', [StudentController::class, 'index']);
+    Route::get('/enrollments/{student}', [EnrollmentController::class, 'show']);
+});
+
+Route::prefix('enrollments')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::post('/', [EnrollmentController::class, 'store']);
+    Route::get('/{student}', [EnrollmentController::class, 'show']);
+    Route::delete('/', [EnrollmentController::class, 'destroy']);
+    Route::put('/', [EnrollmentController::class, 'update']);
 });
