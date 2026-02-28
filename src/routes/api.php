@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -16,7 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [LoginController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [UserController::class, 'store']);
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/logout-all', [LoginController::class, 'logoutAll'])->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', 'role:admin'])->apiResource('user', UserController::class);
+    Route::post('/password/forgot', [UserController::class, 'forgotPassword']);
+    Route::post('/password/reset', [UserController::class, 'resetPassword']);
+});
+
+Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::post('/users/{user}/roles', [RoleController::class, 'assign']);
+    Route::delete('/users/{user}/roles/{role}', [RoleController::class, 'revoke']);
+    Route::get('/users/{user}/roles', [RoleController::class, 'userRoles']);
+
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+});
