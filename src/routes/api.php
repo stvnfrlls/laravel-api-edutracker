@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -38,9 +39,10 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 });
 
-Route::middleware(['auth:sanctum','role:student'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:student'])->group(function () {
     Route::get('/my-subjects', [StudentController::class, 'index']);
     Route::get('/enrollments/{student}', [EnrollmentController::class, 'show']);
+    Route::get('/my-schedule', [ScheduleController::class, 'mySchedule']);
 });
 
 Route::prefix('enrollments')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -48,4 +50,11 @@ Route::prefix('enrollments')->middleware(['auth:sanctum', 'role:admin'])->group(
     Route::get('/{student}', [EnrollmentController::class, 'show']);
     Route::delete('/', [EnrollmentController::class, 'destroy']);
     Route::put('/', [EnrollmentController::class, 'update']);
+});
+
+Route::prefix('schedules')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::post('/', [ScheduleController::class, 'store']);
+    Route::get('/subject/{subject}', [ScheduleController::class, 'show']);
+    Route::put('/{id}', [ScheduleController::class, 'update']);
+    Route::delete('/{id}', [ScheduleController::class, 'destroy']);
 });
