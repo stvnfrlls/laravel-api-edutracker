@@ -9,6 +9,8 @@ class Subject extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'units'];
+
     public function students()
     {
         return $this->belongsToMany(Student::class, 'enrollments')
@@ -18,5 +20,10 @@ class Subject extends Model
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
     }
 }
