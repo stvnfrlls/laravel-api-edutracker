@@ -26,7 +26,7 @@ class Enrollment extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function grades()
+    public function grade()
     {
         return $this->hasOne(Grade::class);
     }
