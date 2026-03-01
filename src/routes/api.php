@@ -41,8 +41,8 @@ Route::prefix('admin')
 
         // User Management
         Route::post('/register', [UserController::class, 'store']);
-        Route::put('/users/{id}', [UserController::class, 'update']);
-        Route::delete('/users/{id}', [UserController::class, 'destroy']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
         // Role Management
         Route::post('/users/{user}/roles', [RoleController::class, 'assign']);

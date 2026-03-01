@@ -11,12 +11,6 @@ class StudentController extends Controller
     {
         $user = $request->user();
 
-        if ($user->role !== 'student') {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 403);
-        }
-
         $student = $user->student()->with('subjects')->first();
 
         if (!$student) {

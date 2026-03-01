@@ -65,11 +65,6 @@ class ScheduleController extends Controller
     {
         $user = $request->user();
 
-        // Ensure user has student role
-        if (!$user->hasRole('student')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         // Load student with subjects and their schedules
         $student = $user->student()->with('subjects.schedules')->first();
 
