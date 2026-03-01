@@ -18,20 +18,29 @@ class EnrollmentController extends Controller
         $request->validate([
             'user_id' => 'required|exists:students,user_id',
             'subject_id' => 'required|exists:subjects,id',
+            'school_year' => 'required|string',
+            'semester' => 'required|string',
         ]);
 
-        // Find student by user_id
         $student = Student::where('user_id', $request->user_id)->firstOrFail();
 
-        // Prevent duplicate enrollment
-        if ($student->subjects()->where('subject_id', $request->subject_id)->exists()) {
+        // Check full unique combination — same subject different semester is allowed
+        if (
+            $student->subjects()
+                ->wherePivot('school_year', $request->school_year)
+                ->wherePivot('semester', $request->semester)
+                ->where('subject_id', $request->subject_id)
+                ->exists()
+        ) {
             return response()->json([
                 'message' => 'Student already enrolled in this subject'
             ], 422);
         }
 
-        // Attach subject
-        $student->subjects()->attach($request->subject_id);
+        $student->subjects()->attach($request->subject_id, [
+            'school_year' => $request->school_year,
+            'semester' => $request->semester,
+        ]);
 
         return response()->json([
             'message' => 'Student successfully enrolled',
