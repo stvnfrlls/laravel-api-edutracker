@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\GradeController;
+use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
@@ -70,6 +71,12 @@ Route::prefix('admin')
             Route::post('/school-years', [AcademicController::class, 'storeSchoolYear']);
             Route::post('/semesters', [AcademicController::class, 'storeSemester']);
             Route::get('/school-years', [AcademicController::class, 'index']);
+        });
+
+        Route::prefix('programs')->group(function () {
+            Route::post('/', [ProgramController::class, 'store']);
+            Route::post('/{program}/curriculum', [ProgramController::class, 'attachSubject']);
+            Route::get('/{program}/curriculum', [ProgramController::class, 'indexCurriculum']);
         });
     });
 

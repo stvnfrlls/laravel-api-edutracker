@@ -26,4 +26,11 @@ class Subject extends Model
     {
         return $this->hasMany(Enrollment::class);
     }
+
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class, 'curriculum')
+            ->withPivot(['year_level', 'semester'])
+            ->withTimestamps();
+    }
 }
