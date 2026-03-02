@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AcademicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\EnrollmentController;
@@ -63,6 +64,12 @@ Route::prefix('admin')
             Route::get('/subject/{subject}', [ScheduleController::class, 'show']);
             Route::put('/{id}', [ScheduleController::class, 'update']);
             Route::delete('/{id}', [ScheduleController::class, 'destroy']);
+        });
+
+        Route::prefix('academic')->group(function () {
+            Route::post('/school-years', [AcademicController::class, 'storeSchoolYear']);
+            Route::post('/semesters', [AcademicController::class, 'storeSemester']);
+            Route::get('/school-years', [AcademicController::class, 'index']);
         });
     });
 
